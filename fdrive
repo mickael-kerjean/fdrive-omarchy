@@ -1,6 +1,5 @@
 #!/bin/sh
 set -eu
-[ "${1:-}" != stop ] || exec systemctl --user stop fdrive.service
 plugin="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 binary="${XDG_CACHE_HOME:-$HOME/.cache}/fdrive/$(cat "$plugin/revision")/fdrive"
 if [ ! -x "$binary" ]; then
@@ -15,8 +14,4 @@ if [ ! -x "$binary" ]; then
         mv "$temporary" "$binary"
     ) 9>"$binary.lock"
 fi
-case "${1:-}" in
-    start) systemctl --user start fdrive.service 2>/dev/null ||
-        exec systemd-run --user --unit=fdrive --collect --property=Restart=on-failure --property=RestartSec=5 -- "$binary" daemon ;;
-    *) exec "$binary" "$@" ;;
-esac
+exec "$binary" "$@"
