@@ -1,19 +1,16 @@
-                #!/bin/sh
-                set -eu
-                plugin="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
-                binary="${XDG_CACHE_HOME:-$HOME/.cache}/fdrive/$(cat "$plugin/revision")/fdrive"
-                if [ ! -x "$binary" ]; then
-                    mkdir -p "$(dirname -- "$binary")"
-                    (
-                        flock 9
-                        [ ! -x "$binary" ] || exit 0
-                        temporary=$(mktemp "$binary.XXXXXX")
-                        trap 'rm -f "$temporary"' EXIT
-                        curl -fsSL --connect-timeout 15 --max-time 120 https://downloads.filestash.app/latest/fdrive-linux-x86_64.bin -o "$temporary"
-                        chmod +x "$temporary"
-                        mv "$temporary" "$binary"
-                    ) 9>"$binary.lock"
-                fi
-                exec "$binary" "$@"
-                EOF
-                chmod +x fdrive
+#!/bin/sh
+set -eu
+plugin="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+binary="${XDG_CACHE_HOME:-$HOME/.cache}/fdrive/$(cat "$plugin/revision")/fdrive"
+if [ ! -x "$binary" ]; then
+    mkdir -p "$(dirname -- "$binary")"
+    (
+        flock 9
+        [ ! -x "$binary" ] || exit 0
+        temporary=$(mktemp "$binary.XXXXXX")
+        curl -fsSL --connect-timeout 15 --max-time 120 https://downloads.filestash.app/latest/fdrive-linux-x86_64.bin -o "$temporary" || { rm -f "$temporary"; exit 1; }
+        chmod +x "$temporary"
+        mv "$temporary" "$binary"
+    ) 9>"$binary.lock"
+fi
+exec "$binary" "$@"
