@@ -1,4 +1,4 @@
-> **Heads up:** This repository is generated automatically by CI. Development happens in the [Filestash Drive repository](https://github.com/mickael-kerjean/fdrive).
+> **Heads up:** This repository is generated automatically by CI. Development happens in the [Filestash Drive repository](https://github.com/mickael-kerjean/fdrive/tree/master/crates/fdrive-omarchy).
 
 Dropbox democratised the idea of a folder that syncs across your devices. Fdrive delivers on that promise and extends it [beyond humans to agents](https://github.com/mickael-kerjean/fdrive/blob/master/crates/fdrive-docker/README.md). If you're looking for the Dropbox experience on Omarchy, here's what the code in this repo gives you:
 
